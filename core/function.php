@@ -155,8 +155,7 @@ function json_response($data,$msg="数据为空",$code='400'){
         'code'=>$code,
         'message'=>$msg,
     );
-    echo json_encode($arr);
-    exit();
+    app()->res=json_encode($arr);
 }
 
 /**
@@ -323,7 +322,7 @@ function http($url, $params = array(), $method = 'GET', $ssl = false){
 function view($view,$data){
     $loader = new Twig_Loader_Filesystem(APP_PATH.'/view');
     $twig = new Twig_Environment($loader);
-    echo $twig->render($view.'.html',$data);
+    app()->res=$twig->render($view.'.html',$data);
 }
 
 /**

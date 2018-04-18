@@ -21,5 +21,5 @@ header("Access-Control-Allow-Origin: *");
 //根据命名空间自动加载php文件
 spl_autoload_register('App::autoload');
 
-App::run()->dispatch();
+App::run()->dispatch()->send();
 

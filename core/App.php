@@ -21,6 +21,9 @@ class App{
     //容器对象实例
     public $container;
 
+    //最终结果, 根据调用方式返回或输出
+    public $res;
+
     //启动框架
     static public function run(){
         return new self();
@@ -64,7 +67,7 @@ class App{
         $this->route['dir']='';
 
         //解析path
-        $path=$_SERVER['REQUEST_URI'];
+        $path=$_SERVER['REQUEST_URI']?$_SERVER['REQUEST_URI']:$_SERVER['request_uri'];
         $path=str_replace('index.php','',$path);
         if(strstr($path,'?'))
             $path=trim(strstr($path,'?',true),'/');
@@ -91,8 +94,9 @@ class App{
         app('hook')->beforeDispatch();
         $controller=app($this->route['class']);
         $reflect = new ReflectionMethod($controller,$this->route['action']);
-        Container::getInstance()->invokeReflectMethod($controller, $reflect);
+        app()->res=Container::getInstance()->invokeReflectMethod($controller, $reflect);
         app('hook')->afterDispatch();
+        return $this;
     }
 
     //根据命名空间自动加载php文件
@@ -100,5 +104,16 @@ class App{
         $class=str_replace('\\','/',$class);
         $file=PATH.'/'.$class.'.php';
         require $file;
+    }
+
+    //输出最终结果
+    public function send(){
+        echo $this->res;
+        exit();
+    }
+
+    //输出最终结果
+    public function res(){
+        return $this->res;
     }
 }
