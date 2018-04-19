@@ -41,4 +41,4 @@
 7. vagrant 虚拟机集成环境搭建 ✔
 8. websocket服务 ✔
 9. 集成swoole http_server 服务 ✔
-10. model文件的处理与快速实例化
+10. model文件的处理与快速实例化 ✔

@@ -103,6 +103,18 @@ function db($table='null'){
     return $_db->table($table);
 }
 
+
+/**
+ * 快速实例化model
+ * @author  ninvfeng <ninvfeng@qq.com>
+ * @param   string $model 模型
+ * @return  mixed 模型对象 
+ * @date    2018-04-09
+ */
+function model($model='null'){
+    return app('app\\model\\'.$model,['config'=>config('mysql')]);
+}
+
 /**
  * 将调试信息写入数据库,方便不便直接浏览器打印调试
  * @author  ninvfeng <ninvfeng@qq.com>
@@ -377,4 +389,16 @@ function cache($key='null',$value='null',$expire=60*60*24*7){
         $_redis->expire($key,$expire);
         return $res;
     }
+}
+
+/**
+ * 驼峰命名转下划线命名 思路:小写和大写紧挨一起的地方,加上分隔符,然后全部转小写
+ * @author ninvfeng <ninvfeng@qq.com>
+ * @param  string $str       要转换的字符串
+ * @param  string $separator 分割符
+ * @return mixed
+ * @date   2018-04-19
+ */
+function uncamelize($str,$separator='_'){
+    return strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $str));
 }

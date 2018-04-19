@@ -7,6 +7,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
 use ReflectionMethod;
+use Exception;
 
 class Container
 {

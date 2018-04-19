@@ -11,8 +11,12 @@ class Mysql
     protected $_join='';
     protected $_debug=false;
 
-    function __construct($config)
+    function __construct($config=[])
     {
+        if(!$config){
+            $config=config('mysql');
+        }
+
         //链接数据库
         $this->_pdo=new \PDO('mysql:host='.$config['host'].';dbname='.$config['name'],$config['user'],$config['pass'],array(\PDO::ATTR_PERSISTENT => true));
 
