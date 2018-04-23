@@ -94,7 +94,7 @@ class App{
         app('hook')->beforeDispatch();
         $controller=app($this->route['class']);
         $reflect = new ReflectionMethod($controller,$this->route['action']);
-        app()->res=Container::getInstance()->invokeReflectMethod($controller, $reflect);
+        app()->res.=Container::getInstance()->invokeReflectMethod($controller, $reflect);
         app('hook')->afterDispatch();
         return $this;
     }
@@ -108,12 +108,7 @@ class App{
 
     //输出最终结果
     public function send(){
-        echo $this->res;
+        echo app()->res;
         exit();
-    }
-
-    //输出最终结果
-    public function res(){
-        return $this->res;
     }
 }
