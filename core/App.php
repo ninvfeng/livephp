@@ -62,24 +62,28 @@ class App{
     public function router(){
 
         //默认控制器方法
-        $this->route['action']='index';
-        $this->route['controller']='index';
+        $this->route['action']=$_GET['a']?$_GET['a']:'index';
+        $this->route['controller']=$_GET['c']?$_GET['c']:'index';
         $this->route['dir']='';
 
         //解析path
+        // dump($_SERVER['REQUEST_URI']);
+        // die();
         $path=$_SERVER['REQUEST_URI']?$_SERVER['REQUEST_URI']:$_SERVER['request_uri'];
-        $path=str_replace('index.php','',$path);
-        if(strstr($path,'?'))
-            $path=trim(strstr($path,'?',true),'/');
-        else
-            $path=trim($path,'/');
-        unset($_GET[$path]);
-        $this->route['path']=$path;
-        if($path){
-            $path=explode('/',$path);
-            $this->route['action']=array_pop($path);
-            $this->route['controller']=array_pop($path);
-            $this->route['dir']=implode('/',$path);            
+        if(strstr($_SERVER['REQUEST_URI'],'index.php',true)=='/' || !strstr($_SERVER['REQUEST_URI'],'index.php')){
+            $path=str_replace('index.php','',$path);
+            if(strstr($path,'?'))
+                $path=trim(strstr($path,'?',true),'/');
+            else
+                $path=trim($path,'/');
+            unset($_GET[$path]);
+            $this->route['path']=$path;
+            if($path){
+                $path=explode('/',$path);
+                $this->route['action']=array_pop($path);
+                $this->route['controller']=array_pop($path);
+                $this->route['dir']=implode('/',$path);            
+            }            
         }
 
         //控制器文件
