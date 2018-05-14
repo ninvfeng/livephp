@@ -167,7 +167,12 @@ function json_response($data,$msg="数据为空",$code='400'){
         'code'=>$code,
         'message'=>$msg,
     );
-    app()->res.=json_encode($arr);
+    if(SWOOLE){
+        app()->res.=json_encode($arr);
+    }else{
+        echo json_encode($arr);
+        exit();
+    }
 }
 
 /**
@@ -401,4 +406,60 @@ function cache($key='null',$value='null',$expire=60*60*24*7){
  */
 function uncamelize($str,$separator='_'){
     return strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $str));
+}
+
+/**
+ * 获取客户端真实IP
+ * @author ninvfeng <ninvfeng@qq.com>
+ * @return string
+ * @date   2018-05-14
+ */
+function getip(){
+    static $realip;
+    if (isset($_SERVER)){
+        if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
+            $realip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+        } else if (isset($_SERVER["HTTP_CLIENT_IP"])) {
+            $realip = $_SERVER["HTTP_CLIENT_IP"];
+        } else {
+            $realip = $_SERVER["REMOTE_ADDR"];
+        }
+    } else {
+        if (getenv("HTTP_X_FORWARDED_FOR")){
+            $realip = getenv("HTTP_X_FORWARDED_FOR");
+        } else if (getenv("HTTP_CLIENT_IP")) {
+            $realip = getenv("HTTP_CLIENT_IP");
+        } else {
+            $realip = getenv("REMOTE_ADDR");
+        }
+    }
+    return $realip;
+}
+
+/**
+ * 全局变量的设置与获取
+ * @author ninvfeng <ninvfeng@qq.com>
+ * @param  string  $key       键
+ * @param  array   $value     值
+ * @return string
+ * @date   2018-05-14
+ */
+function data($key='null',$value='null'){
+    if($key==='null'){
+        return app()->data;
+    }
+    if($value==='null'){
+        $key=explode('.',$key);
+        $res=app()->data;
+        foreach($key as $k => $v){
+            $res=$res[$v];
+        }
+        return $res;
+    }
+    if (strpos($key, '.')) {
+        list($key1, $key2) = explode('.', $key);
+        return app()->data[$key1][$key2]=$value;
+    } else {
+        return app()->data[$key]=$value;
+    }
 }

@@ -21,6 +21,9 @@ class App{
     //容器对象实例
     public $container;
 
+    //全局变量
+    public $data;
+
     //最终结果, 根据调用方式返回或输出
     public $res;
 
@@ -77,7 +80,6 @@ class App{
             else
                 $path=trim($path,'/');
             unset($_GET[$path]);
-            $this->route['path']=$path;
             if($path){
                 $path=explode('/',$path);
                 $this->route['action']=array_pop($path);
@@ -85,6 +87,10 @@ class App{
                 $this->route['dir']=implode('/',$path);            
             }            
         }
+
+        //组装path
+        $this->route['path']=strtolower($this->route['dir']).'/'.strtolower($this->route['controller']).'/'.strtolower($this->route['action']);
+        $this->route['path']=trim($this->route['path'],'/');
 
         //控制器文件
         $this->route['file']=APP_PATH.'controller/'.$this->route['dir'].'/'.$this->route['controller'].'.php';

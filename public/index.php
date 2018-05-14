@@ -9,6 +9,7 @@ ini_set('display_errors','On');
 define('PATH',dirname(__FILE__).'/../');
 define('APP_PATH',PATH.'app/');
 define('CORE_PATH',PATH.'core/');
+define('SWOOLE',false);
 
 //加载核心
 require CORE_PATH.'App.php';
