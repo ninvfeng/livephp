@@ -91,6 +91,9 @@ class App{
         //组装path
         $this->route['path']=strtolower($this->route['dir']).'/'.strtolower($this->route['controller']).'/'.strtolower($this->route['action']);
         $this->route['path']=trim($this->route['path'],'/');
+        
+        //首字母大写
+        $this->route['controller']=ucfirst($this->route['controller']);
 
         //控制器文件
         $this->route['file']=APP_PATH.'controller/'.$this->route['dir'].'/'.$this->route['controller'].'.php';
