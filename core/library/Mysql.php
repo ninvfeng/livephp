@@ -217,7 +217,7 @@ class Mysql
             die();
         }else{
             $pre=$this->_pdo->prepare($sql);
-            $pre->execute();
+            $pre->execute($param);
             if($this->_error()){
                 return $res;
             }
