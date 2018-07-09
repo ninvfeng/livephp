@@ -4,7 +4,7 @@
 //------------------------
 
 use core\Container;
-use core\library\mysql;
+use core\library\Mysql;
 
 /**
  * 调试函数
@@ -13,31 +13,10 @@ use core\library\mysql;
  * @return void 
  * @date   2018-04-09
  */
-function dump($var, $echo = true, $label = null, $flags = ENT_SUBSTITUTE){
-    $label = (null === $label) ? '' : rtrim($label) . ':';
-    if ($var instanceof Model || $var instanceof ModelCollection) {
-        $var = $var->toArray();
-    } 
-
-    ob_start();
-    var_dump($var);
-
-    $output = ob_get_clean();
-    $output = preg_replace('/\]\=\>\n(\s+)/m', '] => ', $output);
-
-    if (PHP_SAPI == 'cli') {
-        $output = PHP_EOL . $label . $output . PHP_EOL;
-    } else {
-        if (!extension_loaded('xdebug')) {
-            $output = htmlspecialchars($output, $flags);
-        }
-        $output = '<pre>' . $label . $output . '</pre>';
-    }
-    if ($echo) {
-        echo($output);
-        return;
-    }
-    return $output;
+function dump($var){
+    echo "<pre>";
+    print_r($var);
+    echo "</pre>";
 }
 
 /**
@@ -98,7 +77,7 @@ function bind($abstract, $concrete = null){
 function db($table='null'){
     static $_db;
     if(!$_db){
-        $_db=new mysql(config('mysql'));
+        $_db=new Mysql(config('mysql'));
     }
     return $_db->table($table);
 }
@@ -462,4 +441,52 @@ function data($key='null',$value='null'){
     } else {
         return app()->data[$key]=$value;
     }
+}
+
+/**
+ * 简单文件上传
+ * @author ninvfeng <ninvfeng@qq.com>
+ * @param  string  $file      文件表单name值
+ * @return array
+ * @date   2018-05-14
+ */
+function upload($file='file'){
+    if($_FILES[$file]){
+        $save_path='upload/'.date('Ym');
+        $save_filename=date('Ymdhis').rand(1000,9999).'.'.pathinfo($_FILES[$file]['name'],PATHINFO_EXTENSION);
+
+        //创建目录
+        if(!is_dir($save_path)){
+            mkdir($save_path,0777,true);
+        }
+        
+        //保存文件
+        $sucess=move_uploaded_file($_FILES[$file]['tmp_name'],$save_path.'/'.$save_filename);
+        if($sucess){
+            $res['path']=$save_path.'/'.$save_filename;
+            $res['name']=$_FILES[$file]['name'];
+            $res['size']=$_FILES[$file]['size'];
+            $res['type']=$_FILES[$file]['type'];
+            return $res;
+        }else{
+            return false;
+        }
+    }
+}
+
+/**
+ * 重定向
+ * @author ninvfeng <ninvfeng@qq.com>
+ * @param  string  $url     链接
+ * @return array
+ * @date   2018-07-01
+ */
+function redirect($url){
+    header("location:$url");
+}
+
+//网站完整域名
+function siteUrl(){
+    $http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
+    return $http_type . $_SERVER['HTTP_HOST'];
 }

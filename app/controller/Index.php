@@ -14,7 +14,6 @@ class Index{
     }
 
     public function test(){
-    	$res=model('User')->allUser();
-    	dump($res);
+        
     }
 }

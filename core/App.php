@@ -70,8 +70,6 @@ class App{
         $this->route['dir']='';
 
         //解析path
-        // dump($_SERVER['REQUEST_URI']);
-        // die();
         $path=$_SERVER['REQUEST_URI']?$_SERVER['REQUEST_URI']:$_SERVER['request_uri'];
         if(strstr($_SERVER['REQUEST_URI'],'index.php',true)=='/' || !strstr($_SERVER['REQUEST_URI'],'index.php')){
             $path=str_replace('index.php','',$path);
