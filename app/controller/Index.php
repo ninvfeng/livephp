@@ -14,6 +14,11 @@ class Index{
     }
 
     public function test(){
-        
+        $res=db('user')
+            ->where(['id'=>1])
+            ->where('username like :kw',['kw'=>'%feng%'])
+            // ->debug()
+            ->find();
+        dump($res);
     }
 }

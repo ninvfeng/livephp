@@ -79,6 +79,7 @@ function db($table='null'){
     if(!$_db){
         $_db=new Mysql(config('mysql'));
     }
+    $_db->clearParam();
     return $_db->table($table);
 }
 
